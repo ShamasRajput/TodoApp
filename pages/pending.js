@@ -9,10 +9,18 @@ const PendingTasks = () => {
     const pendingTodos = todos.filter(todo => !todo.completed);
 
     return (
-        <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-            <h1>Pending Tasks</h1>
-            <nav>
-                <Link href="/">Home</Link> | <Link href="/all">All Tasks</Link> | <Link href="/completed">Completed Tasks</Link>
+        <div className="container">
+            <h1 className='text-centre my-4'>Todo App</h1>
+            <nav className="nav justify-content-centre mb-4">
+                <Link href="/" legacyBehavior>
+                    <a>All Tasks</a>
+                </Link>
+                <Link href="/completed" legacyBehavior>
+                    <a>Completed Tasks</a>
+                </Link>
+                <Link href="/pending" legacyBehavior>
+                    <a className="active">Pending Tasks</a>
+                </Link>
             </nav>
             <TodoList todos={pendingTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
         </div>

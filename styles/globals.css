@@ -1,4 +1,4 @@
-/* Reset some default browser styles */
+Reset some default browser styles
 * {
   margin: 0;
   padding: 0;
@@ -23,19 +23,30 @@ h1 {
   text-align: center;
 }
 
-nav {
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
   margin-bottom: 20px;
-  text-align: center;
 }
 
-nav a {
-  margin: 0 10px;
-  color: #0070f3;
+.nav a {
+  padding: 10px 20px;
   text-decoration: none;
+  color: #0070f3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-nav a:hover {
-  text-decoration: underline;
+.nav a:hover {
+  background-color: #e0f7fa;
+  color: #005bb5;
+}
+
+.nav a.active {
+  background-color: #0070f3;
+  color: white;
 }
 
 button {
@@ -43,7 +54,7 @@ button {
   background-color: #0070f3;
   border: none;
   color: white;
-  border-radius: 8px; /* Increased border radius */
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -76,7 +87,7 @@ input[type="file"] {
 }
 
 .todo-item span.todo-text {
-  font-size: 1.2rem; /* Larger text size */
+  font-size: 1.2rem;
   flex-grow: 1;
   margin-left: 10px;
 }
@@ -103,3 +114,40 @@ input[type="file"] {
 button {
   margin-left: 10px;
 }
+
+.attachment-preview {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.attachment-preview img {
+  max-width: 50px;
+  max-height: 50px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.attachment-preview a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.attachment-preview a:hover {
+  text-decoration: underline;
+}
+.nav-link.active {
+  background-color: #007bff;
+  color: white !important;
+}
+
+.img-thumbnail {
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.todo-item {
+  margin-bottom: 10px;
+}
+

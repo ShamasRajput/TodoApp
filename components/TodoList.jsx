@@ -7,10 +7,8 @@ const TodoList = ({ todos, onToggle, onDelete }) => {
         return null;
     }
 
-    console.log('Rendering TodoList with todos:', todos);
-
     return (
-        <div>
+        <div className='list-group'>
             {todos.map((todo, index) => {
                 if (!todo || !todo.id) {
                     console.error('Invalid todo at index:', index, todo);

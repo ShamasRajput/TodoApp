@@ -85,6 +85,12 @@ export const TodoProvider = ({ children }) => {
   const todos = data ? data.todosCollection.edges.map(edge => edge.node) : [];
 
   const addTodo = async (text, attachment) => {
+    const duplicate = todos.find(todo => todo.text === text);
+    if (duplicate) {
+      alert("Todo item already exists");
+      return;
+    }
+    
     let attachmentUrl = null;
 
     if (attachment) {
