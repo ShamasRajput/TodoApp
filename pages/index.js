@@ -1,34 +1,29 @@
 import React from 'react';
-import Link from 'next/link';
+import Layout from '../components/Layout';
+import Header from '../components/Header';
+import TaskList from '../components/TaskList';
 import TodoInput from '../components/TodoInput';
-import TodoList from '../components/TodoList';
+import Calendar from '../components/Calendar';
 import { useTodos } from '../context/TodoContext';
-import { useRouter } from 'next/router';
 
 const Home = () => {
-    const { todos, addTodo, toggleTodo, deleteTodo, loading, error } = useTodos();
-    const router = useRouter();
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    const { todos, addTodo, toggleTodo, deleteTodo, updateTodo } = useTodos();
+    const taskCount = todos.length;
 
     return (
-        <div className="container">
-            <h1 className='text-centre my-4'>Todo App</h1>
-            <nav className="nav justify-content-centre mb-4">
-                <Link href="/" legacyBehavior>
-                    <a className={router.pathname === '/' ? 'active' : ''}>All Tasks</a>
-                </Link>
-                <Link href="/completed" legacyBehavior>
-                    <a className={router.pathname === '/completed' ? 'active' : ''}>Completed Tasks</a>
-                </Link>
-                <Link href="/pending" legacyBehavior>
-                    <a className={router.pathname === '/pending' ? 'active' : ''}>Pending Tasks</a>
-                </Link>
-            </nav>
-            <TodoInput onAdd={addTodo} />
-            <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
-        </div>
+        <Layout>
+            <Header taskCount={taskCount} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <TodoInput onAdd={addTodo} />
+                    <h2 className="text-xl font-bold mb-4">All Tasks</h2>
+                    <TaskList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} onEdit={updateTodo} />
+                </div>
+                <div>
+                    <Calendar />
+                </div>
+            </div>
+        </Layout>
     );
 };
 

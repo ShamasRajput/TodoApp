@@ -1,10 +1,8 @@
-
-
 import React, { useState } from 'react';
 import { useTodos } from '../context/TodoContext';
 
 const TodoItem = ({ todo }) => {
-    const { updateTodo, toggleTodo, deleteTodo } = useTodos();
+    const { toggleTodo, deleteTodo, updateTodo } = useTodos();
     const [isEditing, setIsEditing] = useState(false);
     const [newText, setNewText] = useState(todo.text);
     const [newAttachment, setNewAttachment] = useState(null);
@@ -15,48 +13,48 @@ const TodoItem = ({ todo }) => {
     };
 
     return (
-        <div className={`list-group-item d-flex justify-content-between align-items-center ${todo.completed ? 'list-group-item-success' : ''}`}>
+        <div className={`flex justify-between items-center p-4 bg-white rounded-lg shadow mb-4 ${todo.completed ? 'bg-white' : 'bg-gray-300'}`}>
             {isEditing ? (
-                <div className="w-100">
-                    <div className="input-group mb-2">
+                <div className="w-full">    
+                    <div className="flex mb-2">
                         <input
-                            type="text"
+                            type="text" 
                             value={newText}
                             onChange={(e) => setNewText(e.target.value)}
-                            className="form-control"
+                            className="flex-1 p-2 border border-gray-300 rounded-l-lg"
                         />
                         <input
                             type="file"
                             onChange={(e) => setNewAttachment(e.target.files[0])}
-                            className="form-control-file"
+                            className="p-2 border border-gray-300 rounded-r-lg"
                         />
                     </div>
-                    <div className="d-flex justify-content-end">
-                        <button onClick={handleUpdate} className="btn btn-primary mr-2">Save</button>
-                        <button onClick={() => setIsEditing(false)} className="btn btn-secondary">Cancel</button>
+                    <div className="flex justify-end">
+                        <button onClick={handleUpdate} className="p-2 bg-yellow-500 text-white rounded mr-2">Save</button>
+                        <button onClick={() => setIsEditing(false)} className="p-2 bg-gray-300 rounded">Cancel</button>
                     </div>
                 </div>
             ) : (
                 <>
-                    <div className="d-flex align-items-center" style={{ flexGrow: 1 }}>
+                    <div className="flex items-center flex-grow">
                         <input
                             type="checkbox"
                             checked={todo.completed}
                             onChange={() => toggleTodo(todo.id, !todo.completed)}
-                            className="mr-2"
+                            className="mr-2 h-6 w-6 rounded-full focus:ring-2 focus:ring-blue-500"
                         />
-                        <span className="todo-text" style={{marginLeft: "10px", flexGrow: 1 }}>{todo.text}</span>
+                        <span className={`flex-grow ml-2 ${todo.completed ? 'line-through' : ''}`}>
+                            {todo.text}
+                        </span>
                     </div>
                     {todo.attachment && (
-                        <div className="attachment-preview d-flex align-items-center">
-                            <a href={todo.attachment} target="_blank" rel="noopener noreferrer">
-                                <img src={todo.attachment} alt="attachment preview" className="img-thumbnail mr-2" style={{ width: '50px', height: '50px' }} />
-                            </a>
-                        </div>
+                        <a href={todo.attachment} target="_blank" rel="noopener noreferrer" className="mr-2">
+                            <img src={todo.attachment} alt="attachment preview" className="w-12 h-12 object-cover rounded" />
+                        </a>
                     )}
-                    <div className="d-flex justify-content-end">
-                        <button onClick={() => setIsEditing(true)} className="btn btn-outline-primary btn-sm mr-2">Edit</button>
-                        <button onClick={() => deleteTodo(todo.id, todo.attachment)} className="btn btn-outline-danger btn-sm">Delete</button>
+                    <div className="flex items-center">
+                        <button onClick={() => setIsEditing(true)} className="p-2 bg-yellow-500 text-white rounded mr-2">Edit</button>
+                        <button onClick={() => deleteTodo(todo.id, todo.attachment)} className="p-2 bg-red-800 text-white rounded">Delete</button>
                     </div>
                 </>
             )}
