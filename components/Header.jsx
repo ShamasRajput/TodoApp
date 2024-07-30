@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
 
 const Header = ( {taskCount} ) => {
     const router = useRouter();
-    const todos = useSelector((state) => state.todos.todos);
 
     let headerText = '';
 

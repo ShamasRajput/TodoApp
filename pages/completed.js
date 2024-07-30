@@ -9,7 +9,6 @@ import { toggleTodo, deleteTodo } from '../redux/todoSlice';
 const CompletedTasks = () => {
     const dispatch = useDispatch();
     const todos = useSelector((state) => state.todos.todos);
-    console.log('check all', todos);
 
     const completedTodos = JSON.parse(JSON.stringify(todos)).filter(todo => todo.completed);
     const taskCount = completedTodos.length;

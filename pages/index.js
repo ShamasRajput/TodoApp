@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../components/Layout';
 import Header from '../components/Header';
 import TaskList from '../components/TaskList';
 import TodoInput from '../components/TodoInput';
 import Calendar from '../components/Calendar';
-import { addTodo, toggleTodo, deleteTodo, updateTodo } from '../redux/todoSlice';
+import { addTodo, toggleTodo, deleteTodo, updateTodo, fetchTodos, setTodosLoaded } from '../redux/todoSlice';
 
 const Home = () => {
     const dispatch = useDispatch();
     const todos = useSelector((state) => state.todos.todos);
+    const isLoaded = useSelector((state) => state.todos.isLoaded);
+
     const taskCount = todos.length;
 
-
+    useEffect(() => {
+        if(!isLoaded){
+            dispatch(fetchTodos());
+        }
+      }, [dispatch, isLoaded]);    
+      
     const handleAddTodo = (text, attachment) => {
         dispatch(addTodo({ text, attachment }));
     };

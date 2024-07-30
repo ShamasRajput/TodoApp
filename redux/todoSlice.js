@@ -216,8 +216,13 @@ const todoSlice = createSlice({
         todos: [],
         loading: false,
         error: null,
+        isLoaded: false,
     },
-    reducers: {},
+    reducers: {
+      setTodosLoaded: (state, action) => {
+        state.isLoaded = action.payload;
+    },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchTodos.pending, (state) => {
@@ -228,16 +233,19 @@ const todoSlice = createSlice({
                 state.loading = false;
                 state.todos = action.payload;
                 console.log('Fetched Todos:', state.todos);
+                state.isLoaded = true;
 
             })
             .addCase(fetchTodos.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+                state.isLoaded = true;
             })
             .addCase(addTodo.fulfilled, (state, action) => {
-              const updatedTodos = [...state.todos]
-              updatedTodos.unshift(action.payload)
-              state.todos = [...updatedTodos]
+              state.todos.unshift(action.payload);
+              // const updatedTodos = [...state.todos]
+              // updatedTodos.unshift(action.payload)
+              // state.todos = [...updatedTodos]
             })
             .addCase(updateTodo.fulfilled, (state, action) => {
                 const index = state.todos.findIndex(todo => todo.id === action.payload.id);
