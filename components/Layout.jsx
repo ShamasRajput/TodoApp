@@ -34,7 +34,7 @@ const Layout = ({ children }) => {
             {/* Sidebar */}
             <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-full lg:w-64 bg-white text-gray-800 flex flex-col shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-200 ease-in-out`}>
                 <div className="p-4">
-                    <a href='/'><img src='/favicon.ico' alt='Todo App Logo' className='w-8 h-8' /></a>
+                    <Link href='/'><img src='/favicon.ico' alt='Todo App Logo' className='w-8 h-8' /></Link>
                 </div>
                 <nav className="flex-1 p-4 space-y-3 flex flex-col justify-center">
                     <Link href="/">
