@@ -37,14 +37,14 @@ const Layout = ({ children }) => {
                     <a href='/'><img src='/favicon.ico' alt='Todo App Logo' className='w-8 h-8' /></a>
                 </div>
                 <nav className="flex-1 p-4 space-y-3 flex flex-col justify-center">
-                    <Link href="/" legacyBehavior>
-                        <a className={linkClasses('/')}>Dashboard</a>
+                    <Link href="/">
+                        <span className={linkClasses('/')}>Dashboard</span>
                     </Link>
-                    <Link href="/completed" legacyBehavior>
-                        <a className={linkClasses('/completed')}>Completed Tasks</a>
+                    <Link href="/completed">
+                        <span className={linkClasses('/completed')}>Completed Tasks</span>
                     </Link>
-                    <Link href="/pending" legacyBehavior>
-                        <a className={linkClasses('/pending')}>Pending Tasks</a>
+                    <Link href="/pending">
+                        <span className={linkClasses('/pending')}>Pending Tasks</span>
                     </Link>
                 </nav>
                 <div className="p-4 mt-auto">Profile</div>
