@@ -1,14 +1,31 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useEffect,useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
+
 
 const TodoInput = ({ onAdd }) => {
     const [text, setText] = useState('');
     const [attachment, setAttachment] = useState(null);
+    const [error, setError] = useState('');
     const fileInputRef = useRef(null);
+    const todos = useSelector((state) => state.todos.todos);
+
+
+    useEffect(() => {
+        if (error && !todos.some((todo) => todo.text === text.trim())) {
+            setError('');
+        }
+    }, [text, todos, error]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (text.trim()) {
+            // Check for duplicate
+            const isDuplicate = todos.some((todo) => todo.text === text.trim());
+            if (isDuplicate) {
+                setError('Todo item already exists.');
+                return;
+            }
             onAdd(text, attachment);
             setText('');
             setAttachment(null);
@@ -52,6 +69,7 @@ const TodoInput = ({ onAdd }) => {
                 <button className="p-2 bg-yellow-500 text-white rounded-lg ml-2" type="submit">Add</button>
             </div>
             {attachment && <p className="text-sm text-gray-600">{attachment.name}</p>}
+            {error && <p className="text-red-500">{error}</p>}
         </form>
     );
 };

@@ -1,24 +1,34 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../components/Layout';
 import Header from '../components/Header';
 import TaskList from '../components/TaskList';
-import TodoInput from '../components/TodoInput';
 import Calendar from '../components/Calendar';
-import { useTodos } from '../context/TodoContext';
+import { toggleTodo, deleteTodo } from '../redux/todoSlice';
 
 const PendingTasks = () => {
-    const { todos, addTodo, toggleTodo, deleteTodo } = useTodos();
-    const pendingTodos = todos.filter(todo => !todo.completed);
+    const dispatch = useDispatch();
+    const todos = useSelector((state) => state.todos.todos);
+
+    const pendingTodos = JSON.parse(JSON.stringify(todos)).filter(todo => !todo.completed);
     const taskCount = pendingTodos.length;
+
+
+    const handleToggleTodo = (id) => {
+        dispatch(toggleTodo(id));
+    };
+
+    const handleDeleteTodo = (id) => {
+        dispatch(deleteTodo(id));
+    };
 
     return (
         <Layout>
-            <Header taskCount={taskCount} />
+            <Header taskCount={taskCount}/>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                    <TodoInput onAdd={addTodo} />
                     <h2 className="text-xl font-bold mb-4">Pending Tasks</h2>
-                    <TaskList todos={pendingTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
+                    <TaskList todos={pendingTodos} onToggle={handleToggleTodo} onDelete={handleDeleteTodo} />
                 </div>
                 <div>
                     <Calendar />

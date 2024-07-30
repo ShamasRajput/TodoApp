@@ -1,15 +1,15 @@
 import { ApolloProvider } from '@apollo/client';
+import { Provider } from 'react-redux';
+import store from '../redux/store';
 import client from '../lib/apolloClient';
-import { TodoProvider } from '../context/TodoContext';
 import 'tailwindcss/tailwind.css';
-//import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
-      <TodoProvider>
+      <Provider store={store}>
         <Component {...pageProps} />
-      </TodoProvider>
+      </Provider>
     </ApolloProvider>
   );
 }
