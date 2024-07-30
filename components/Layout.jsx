@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
             {/* Mobile Header */}
             <div className="lg:hidden flex justify-between items-center bg-white p-4 shadow-lg">
                 <div className="flex items-center">
-                    <a href='/'><img src='/favicon.ico' alt='Todo App Logo' className='w-8 h-8' /></a>
+                    <Link href='/'><img src='/favicon.ico' alt='Todo App Logo' className='w-8 h-8' /></Link>
                     <h1 className="ml-2 text-xl font-bold">Todo App</h1>
                 </div>
                 <button onClick={toggleSidebar} className="text-gray-800">
