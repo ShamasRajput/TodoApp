@@ -27,7 +27,7 @@ const TodoItem = ({ todo }) => {
   };
 
   return (
-    <div className={`flex justify-between items-center p-4 bg-white rounded-lg shadow mb-4 ${todo.completed ? 'bg-white' : 'bg-gray-300'}`}>
+    <div className={`flex justify-between items-center p-4 bg-white rounded-lg shadow mb-4 ${todo.completed ? 'bg-green' : 'bg-white'}`}>
       {isEditing ? (
         <div className="w-full">
           <div className="flex mb-2">
