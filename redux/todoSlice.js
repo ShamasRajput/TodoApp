@@ -1,132 +1,92 @@
-// redux/todoSlice.js
+// // redux/todoSlice.js
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import supabase from '../lib/supabase';
-import { gql } from '@apollo/client';
 import client from '../lib/apolloClient';
+import { gql } from '@apollo/client';
 
 const FETCH_TODOS = gql`
   query GetTodos {
-    todosCollection(orderBy: { created_at: DescNullsLast }) {
-      edges {
-        node {
-          id
-          text
-          completed
-          attachment
-          created_at
-        }
-      }
+    todos {
+      id
+      text
+      completed
+      attachment
+      createdAt
     }
   }
 `;
 
 const ADD_TODO = gql`
   mutation AddTodo($text: String!, $attachment: String) {
-    insertIntotodosCollection(objects: { text: $text, attachment: $attachment }) {
-      records {
-        id
-        text
-        completed
-        attachment
-        created_at
-      }
+    addTodo(text: $text, attachment: $attachment) {
+      id
+      text
+      completed
+      attachment
+      createdAt
     }
   }
 `;
 
 const UPDATE_TODO = gql`
-  mutation UpdateTodo($id: Int!, $text: String!, $attachment: String) {
-    updatetodosCollection(filter: { id: { eq: $id } }, set: { text: $text, attachment: $attachment }) {
-      records {
-        id
-        text
-        completed
-        attachment
-        created_at
-      }
-    }
-  }
-`;
-
-const TOGGLE_TODO = gql`
-  mutation ToggleTodo($id: Int!, $completed: Boolean!) {
-    updatetodosCollection(filter: { id: { eq: $id } }, set: { completed: $completed }) {
-      records {
-        id
-        text
-        completed
-        attachment
-        created_at
-      }
+  mutation UpdateTodo($id: ID!, $text: String, $completed: Boolean, $attachment: String) {
+    updateTodo(id: $id, text: $text, completed: $completed, attachment: $attachment) {
+      id
+      text
+      completed
+      attachment
+      createdAt
     }
   }
 `;
 
 const DELETE_TODO = gql`
-  mutation DeleteTodo($id: Int!) {
-    deleteFromtodosCollection(filter: { id: { eq: $id } }) {
-      records {
-        id
-      }
-    }
+  mutation DeleteTodo($id: ID!) {
+    deleteTodo(id: $id)
   }
 `;
 
-
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
-  try {
-    const { data } = await client.query({ query: FETCH_TODOS });
-    return data.todosCollection.edges.map(edge => edge.node);
-  } catch (error) {
-    console.error('Failed to fetch todos:', error.message);
-    throw error;
-  }
-
+  const { data } = await client.query({ query: FETCH_TODOS });
+  return data.todos;
 });
-
 
 export const addTodo = createAsyncThunk('todos/addTodo', async ({ text, attachment }) => {
   let attachmentUrl = null;
 
   if (attachment) {
-    try {
-      const fileName = `${Date.now()}_${encodeURIComponent(attachment.name)}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('todoapp')
-        .upload(fileName, attachment, {
-          cacheControl: '3600',
-          upsert: false,
-        });
+    const fileName = `${Date.now()}_${encodeURIComponent(attachment.name)}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('todoapp')
+      .upload(fileName, attachment, {
+        cacheControl: '3600',
+        upsert: false,
+      });
 
-      if (uploadError) {
-        throw new Error('Error uploading attachment');
-      }
-
-      const { data, error: urlError } = supabase.storage
-        .from('todoapp')
-        .getPublicUrl(fileName);
-
-      if (urlError) {
-        throw new Error('Error getting public URL');
-      }
-
-      attachmentUrl = decodeURIComponent(data.publicUrl);
-    } catch (error) {
-      console.log('Attachment upload error:', error.message)
+    if (uploadError) {
+      throw new Error('Error uploading attachment');
     }
+
+    const { data, error: urlError } = supabase.storage
+      .from('todoapp')
+      .getPublicUrl(fileName);
+
+    if (urlError) {
+      throw new Error('Error getting public URL');
+    }
+
+    attachmentUrl = decodeURIComponent(data.publicUrl);
   }
 
-  try {
-    const { data } = await client.mutate({
-      mutation: ADD_TODO,
-      variables: { text, attachment: attachmentUrl },
-    });
+  const { data } = await client.mutate({
+    mutation: ADD_TODO,
+    variables: { text, attachment: attachmentUrl },
+  });
 
-    return data.insertIntotodosCollection.records[0];
-  } catch (error) {
-    console.log('Failed to Add todo:', error.message)
-  }
+  return data.addTodo;
 });
+
 export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, text, newAttachment }, { getState }) => {
   let newAttachmentUrl = null;
 
@@ -176,16 +136,16 @@ export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, text
     variables: { id, text, attachment: newAttachmentUrl },
   });
 
-  return data.updatetodosCollection.records[0];
+  return data.updateTodo;
 });
 
 export const toggleTodo = createAsyncThunk('todos/toggleTodo', async ({ id, completed }) => {
   const { data } = await client.mutate({
-    mutation: TOGGLE_TODO,
+    mutation: UPDATE_TODO,
     variables: { id, completed },
   });
 
-  return data.updatetodosCollection.records[0];
+  return data.updateTodo;
 });
 
 export const deleteTodo = createAsyncThunk('todos/deleteTodo', async ({ id, attachment }) => {
@@ -199,12 +159,12 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async ({ id, atta
     }
   }
 
-  const { data } = await client.mutate({
+  await client.mutate({
     mutation: DELETE_TODO,
     variables: { id },
   });
 
-  return data.deleteFromtodosCollection.records[0];
+  return { id };
 });
 
 const todoSlice = createSlice({
@@ -225,9 +185,9 @@ const todoSlice = createSlice({
       const selectedDate = action.payload;
       if (selectedDate) {
         state.filteredTodos = state.todos.filter(todo => {
-          const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+          const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
           return todoDate === selectedDate;
-        });
+        }); 
       } else {
         state.filteredTodos = state.todos;
       }
@@ -235,7 +195,7 @@ const todoSlice = createSlice({
     setSelectedDate: (state, action) => {
       state.selectedDate = action.payload;
       state.filteredTodos = state.todos.filter(todo => {
-        const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+        const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
         return action.payload ? todoDate === action.payload : true;
       });
     },
@@ -251,7 +211,7 @@ const todoSlice = createSlice({
         state.isLoaded = true;
         if (state.selectedDate) {
           state.filteredTodos = action.payload.filter(todo => {
-            const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+            const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
             return todoDate === state.selectedDate;
           });
         } else {
@@ -264,44 +224,78 @@ const todoSlice = createSlice({
         state.error = action.error.message;
         state.isLoaded = true;
       })
+      .addCase(addTodo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(addTodo.fulfilled, (state, action) => {
+        state.loading = false;
         state.todos.unshift(action.payload);
-        const todoDate = new Date(action.payload.created_at).toISOString().split('T')[0];
+        const todoDate = new Date(parseInt(action.payload.createdAt, 10)).toISOString().split('T')[0];
         if (!state.selectedDate || todoDate === state.selectedDate) {
           state.filteredTodos.unshift(action.payload);
         }
       })
+      .addCase(addTodo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateTodo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(updateTodo.fulfilled, (state, action) => {
+        state.loading = false;
         const index = state.todos.findIndex(todo => todo.id === action.payload.id);
         if (index !== -1) {
           state.todos[index] = action.payload;
         }
         state.filteredTodos = state.todos.filter(todo => {
-          const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+          const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
           return state.selectedDate ? todoDate === state.selectedDate : true;
         });
+      })
+      .addCase(updateTodo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(toggleTodo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
       .addCase(toggleTodo.fulfilled, (state, action) => {
+        state.loading = false;
         const index = state.todos.findIndex(todo => todo.id === action.payload.id);
         if (index !== -1) {
           state.todos[index] = action.payload;
         }
         state.filteredTodos = state.todos.filter(todo => {
-          const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+          const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
           return state.selectedDate ? todoDate === state.selectedDate : true;
         });
       })
+      .addCase(toggleTodo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteTodo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(deleteTodo.fulfilled, (state, action) => {
+        state.loading = false;
         state.todos = state.todos.filter(todo => todo.id !== action.payload.id);
         state.filteredTodos = state.todos.filter(todo => {
-          const todoDate = new Date(todo.created_at).toISOString().split('T')[0];
+          const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
           return state.selectedDate ? todoDate === state.selectedDate : true;
         });
+      })
+      .addCase(deleteTodo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
-
-
 
 export const { filterTodosByDate, setSelectedDate } = todoSlice.actions;
 export default todoSlice.reducer;

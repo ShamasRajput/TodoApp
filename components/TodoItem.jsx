@@ -1,6 +1,6 @@
 // components/TodoItem.js
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleTodo, deleteTodo, updateTodo } from '../redux/todoSlice';
 
 const TodoItem = ({ todo }) => {
@@ -8,6 +8,7 @@ const TodoItem = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newText, setNewText] = useState(todo.text);
   const [newAttachment, setNewAttachment] = useState(null);
+  const loading = useSelector((state) => state.todos.loading);
 
   const handleUpdate = async () => {
     try {
@@ -44,7 +45,7 @@ const TodoItem = ({ todo }) => {
             />
           </div>
           <div className="flex justify-end">
-            <button onClick={handleUpdate} className="p-2 bg-yellow-500 text-white rounded mr-2">Save</button>
+            <button onClick={handleUpdate} className="p-2 bg-yellow-500 text-white rounded mr-2" disabled={loading}>Save</button>
             <button onClick={() => setIsEditing(false)} className="p-2 bg-gray-300 rounded">Cancel</button>
           </div>
         </div>
@@ -68,7 +69,7 @@ const TodoItem = ({ todo }) => {
           )}
           <div className="flex items-center">
             <button onClick={() => setIsEditing(true)} className="p-2 bg-yellow-500 text-white rounded mr-2">Edit</button>
-            <button onClick={handleDelete} className="p-2 bg-red-800 text-white rounded">Delete</button>
+            <button onClick={handleDelete} className="p-2 bg-red-800 text-white rounded" disabled={loading}>Delete</button>
           </div>
         </>
       )}
