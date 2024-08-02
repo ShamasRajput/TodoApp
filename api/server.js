@@ -7,11 +7,7 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors({
-  origin: 'https://todo-app-kappa-two-75.vercel.app/', // Allow requests from this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-  credentials: true // Allow credentials if needed
-}));
+app.use(cors());
 
 const uri = process.env.MONGO_URI;
 mongoose.connect(uri)
