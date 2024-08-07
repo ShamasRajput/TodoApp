@@ -7,7 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedDate } from '../redux/todoSlice';
 import { RootState, AppDispatch } from '../redux/store';
 
-const MyCalendar: React.FC = () => {
+
+interface CalendarProps {
+  onDateChange: (date: Date) => void; // Add onDateChange prop
+}
+
+const MyCalendar: React.FC<CalendarProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedDate = useSelector((state: RootState) => state.todos.selectedDate);
   const [value, setValue] = useState<Date>(selectedDate ? new Date(selectedDate) : new Date());

@@ -28,7 +28,7 @@ const TodoInput: React.FC<TodoInputProps> = ({ onAdd }) => {
           return false;
         }
         try {
-          const todoDate = new Date(todo.createdAt).toISOString().split('T')[0];
+          const todoDate = new Date(parseInt(todo.createdAt,10)).toISOString().split('T')[0];
           return todoDate === selectedDate;
         } catch (error) {
           console.error('Invalid created_at value:', todo.createdAt, error);

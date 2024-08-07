@@ -10,6 +10,7 @@ interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string, text: string, attachment?: File) => void; 
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {

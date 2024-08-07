@@ -8,9 +8,10 @@ interface TaskListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string, text: string, attachment?: File) => void; // Add onEdit prop
 }
 
-const TaskList: React.FC<TaskListProps> = ({ todos, onToggle, onDelete }) => {
+const TaskList: React.FC<TaskListProps> = ({ todos, onToggle, onDelete, onEdit }) => {
   return (
     <div className='max-h-80 overflow-y-auto p-4 bg-white rounded-2xl shadow-lg scrollbar-thin'>
       {todos.length > 0 ? (
@@ -20,6 +21,7 @@ const TaskList: React.FC<TaskListProps> = ({ todos, onToggle, onDelete }) => {
             todo={todo}
             onToggle={onToggle}
             onDelete={onDelete}
+            onEdit={onEdit} // Pass onEdit to TodoItem
           />
         ))
       ) : (
