@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -21,7 +20,8 @@ const TodoInput = ({ onAdd }) => {
                 return false;
             }
             try {
-                const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0] === selectedDate;
+                const todoDate = new Date(parseInt(todo.createdAt, 10)).toISOString().split('T')[0];
+                return todoDate === selectedDate; 
             } catch (error) {
                 console.error('Invalid created_at value:', todo.createdAt, error);
                 return false;
@@ -29,12 +29,8 @@ const TodoInput = ({ onAdd }) => {
         })
         : todos;
 
-    // const todosForSelectedDate = selectedDate 
-    //     ? todos.filter(todo => new Date(todo.created_at).toISOString().split('T')[0] === selectedDate)
-    //     : todos;
-
     useEffect(() => {
-        if (error && !todosForSelectedDate.some((todo) => todo.text === text.trim())) {
+        if (error && !todosForSelectedDate.some((todo) => todo.text.toLowerCase().trim() === text.toLowerCase().trim())) {
             setError('');
         }
     }, [text, todosForSelectedDate, error]);
@@ -43,7 +39,7 @@ const TodoInput = ({ onAdd }) => {
         e.preventDefault();
         if (text.trim()) {
             // Check for duplicate on the selected date
-            const isDuplicate = todosForSelectedDate.some((todo) => todo.text === text.trim());
+            const isDuplicate = todosForSelectedDate.some((todo) => todo.text.toLowerCase().trim() === text.toLowerCase().trim());
             if (isDuplicate) {
                 setError('Todo item already exists.');
                 return;
@@ -54,6 +50,8 @@ const TodoInput = ({ onAdd }) => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = ''; // Reset file input
             }
+        } else {
+            setError('Todo text cannot be empty.');
         }
     };
 
