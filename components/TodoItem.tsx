@@ -1,14 +1,23 @@
-// components/TodoItem.js
-import React, { useState } from 'react';
+// components/TodoItem.tsx
+
+import React, { useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTodo, deleteTodo, updateTodo } from '../redux/todoSlice';
+import { RootState, AppDispatch } from '../redux/store';
+import { Todo } from '../types'; 
 
-const TodoItem = ({ todo }) => {
-  const dispatch = useDispatch();
-  const [isEditing, setIsEditing] = useState(false);
-  const [newText, setNewText] = useState(todo.text);
-  const [newAttachment, setNewAttachment] = useState(null);
-  const loading = useSelector((state) => state.todos.loading);
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [newText, setNewText] = useState<string>(todo.text);
+  const [newAttachment, setNewAttachment] = useState<File | null>(null);
+  const loading = useSelector((state: RootState) => state.todos.loading);
 
   const handleUpdate = async () => {
     try {
@@ -27,6 +36,12 @@ const TodoItem = ({ todo }) => {
     }
   };
 
+  const handleAttachmentChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setNewAttachment(e.target.files[0]);
+    }
+  };
+
   return (
     <div className={`flex justify-between items-center p-4 bg-white rounded-lg shadow mb-4 ${todo.completed ? 'bg-green' : 'bg-white'}`}>
       {isEditing ? (
@@ -40,7 +55,7 @@ const TodoItem = ({ todo }) => {
             />
             <input
               type="file"
-              onChange={(e) => setNewAttachment(e.target.files[0])}
+              onChange={handleAttachmentChange}
               className="p-2 border border-gray-300 rounded-r-lg"
             />
           </div>
