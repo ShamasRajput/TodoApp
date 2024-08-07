@@ -27,16 +27,22 @@ const CompletedTasks: React.FC = () => {
     dispatch(deleteTodo({ id }));
   };
 
+    // No-op for onEdit if not used
+    const handleEditTodo = (id: string, text: string, attachment?: File) => {};
+
+    // No-op for onDateChange if not used in this context
+    const handleDateChange = (date: Date) => {};
+
   return (
     <Layout>
       <Header taskCount={taskCount} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <h2 className="text-xl font-bold mb-4">Completed Tasks</h2>
-          <TaskList todos={completedTodos} onToggle={handleToggleTodo} onDelete={handleDeleteTodo} />
+          <TaskList todos={completedTodos} onToggle={handleToggleTodo} onDelete={handleDeleteTodo} onEdit={handleEditTodo} />
         </div>
         <div>
-          <Calendar />
+          <Calendar onDateChange={handleDateChange} />
         </div>
       </div>
     </Layout>

@@ -28,6 +28,12 @@ const PendingTasks: React.FC = () => {
     dispatch(deleteTodo({ id }));
   };
 
+  // No-op for onEdit if not used
+  const handleEditTodo = (id: string, text: string, attachment?: File) => {};
+
+  // No-op for onDateChange if not used in this context
+  const handleDateChange = (date: Date) => {};
+
   return (
     <Layout>
       <Header taskCount={taskCount} />
@@ -38,10 +44,11 @@ const PendingTasks: React.FC = () => {
             todos={pendingTodos}
             onToggle={handleToggleTodo}
             onDelete={handleDeleteTodo}
+            onEdit={handleEditTodo}
           />
         </div>
         <div>
-          <Calendar />
+          <Calendar onDateChange={handleDateChange}/>
         </div>
       </div>
     </Layout>
