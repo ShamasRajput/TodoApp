@@ -2,9 +2,9 @@
 
 import React, { useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleTodo, deleteTodo, updateTodo } from '../redux/todoSlice';
-import { RootState, AppDispatch } from '../redux/store';
-import { Todo } from '../types'; 
+import { toggleTodo, deleteTodo, updateTodo } from '../services/redux/todoSlice';
+import { RootState, AppDispatch } from '../services/redux/store';
+import { Todo } from '../../types'; 
 
 interface TodoItemProps {
   todo: Todo;

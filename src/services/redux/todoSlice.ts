@@ -1,11 +1,11 @@
 // redux/todoSlice.ts
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import supabase from '../lib/supabase';
-import client from '../lib/apolloClient';
+import supabase from '../../lib/supabase';
+import client from '../../lib/apolloClient';
 import { gql } from '@apollo/client';
 import  {RootState}  from './store';
-import  {Todo} from '../types'
+import  {Todo} from '../../../types'
 
 // Define the GraphQL queries and mutations
 const FETCH_TODOS = gql`

@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Layout from '../components/Layout';
-import Header from '../components/Header';
-import TaskList from '../components/TaskList';
-import Calendar from '../components/Calendar';
-import { toggleTodo, deleteTodo } from '../redux/todoSlice';
-import { RootState, AppDispatch } from '../redux/store';
+import Layout from '../src/components/Layout';
+import Header from '../src/components/Header';
+import TaskList from '../src/components/TaskList';
+import Calendar from '../src/components/Calendar';
+import { toggleTodo, deleteTodo } from '../src/services/redux/todoSlice';
+import { RootState, AppDispatch } from '../src/services/redux/store';
 
 const PendingTasks: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

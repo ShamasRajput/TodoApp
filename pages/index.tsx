@@ -1,12 +1,11 @@
 // pages/index.tsx
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Layout from '../components/Layout';
-import Header from '../components/Header';
-import TaskList from '../components/TaskList';
-import TodoInput from '../components/TodoInput';
-import Calendar from '../components/Calendar';
+import Layout from '../src/components/Layout';
+import Header from '../src/components/Header';
+import TaskList from '../src/components/TaskList';
+import TodoInput from '../src/components/TodoInput';
+import Calendar from '../src/components/Calendar';
 import {
   addTodo,
   toggleTodo,
@@ -14,14 +13,13 @@ import {
   updateTodo,
   fetchTodos,
   setSelectedDate,
-} from '../redux/todoSlice';
-import { RootState, AppDispatch } from '../redux/store';
+} from '../src/services/redux/todoSlice';
+import { RootState, AppDispatch } from '../src/services/redux/store';
 
 const Home: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoaded = useSelector((state: RootState) => state.todos.isLoaded);
   const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
-  const selectedDate = useSelector((state: RootState) => state.todos.selectedDate);
   const taskCount = filteredTodos.length;
 
   useEffect(() => {
@@ -51,11 +49,7 @@ const Home: React.FC = () => {
     dispatch(updateTodo({ id, text, newAttachment: attachment }));
   };
 
-  const handleDateChange = (date: Date) => {
-    const dateString = date.toISOString().split('T')[0];
-    localStorage.setItem('selectedDate', dateString);
-    dispatch(setSelectedDate(dateString));
-  };
+  const handleDateChange = (date: Date) => {};
 
   return (
     <Layout>

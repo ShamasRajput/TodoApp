@@ -1,11 +1,10 @@
 // components/MyCalendar.tsx
-
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedDate } from '../redux/todoSlice';
-import { RootState, AppDispatch } from '../redux/store';
+import { setSelectedDate } from '../services/redux/todoSlice';
+import { RootState, AppDispatch } from '../services/redux/store';
 
 
 interface CalendarProps {
@@ -28,7 +27,7 @@ const MyCalendar: React.FC<CalendarProps> = () => {
     localStorage.setItem('selectedDate', utcDateString);
     dispatch(setSelectedDate(utcDateString));
   };
-
+  
   useEffect(() => {
     if (selectedDate) {
       setValue(new Date(selectedDate));
@@ -39,7 +38,6 @@ const MyCalendar: React.FC<CalendarProps> = () => {
   const formattedDate = selectedDate
     ? new Intl.DateTimeFormat('en-US', { dateStyle: 'full' }).format(new Date(selectedDate))
     : 'Select a date';
-
   return (
     <div className="p-4 bg-white rounded-2xl shadow-lg">
       <div className="mb-4 text-center">

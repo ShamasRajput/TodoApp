@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState, useRef, FormEvent, ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { Todo } from '../types'; 
+import { RootState } from '../services/redux/store';
+import { Todo } from '../../types'; 
 
 interface TodoInputProps {
   onAdd: (text: string, attachment: File | null) => void;
